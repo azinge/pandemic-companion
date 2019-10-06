@@ -1,0 +1,9 @@
+import * as React from 'react';
+import renderer from 'react-test-renderer';
+
+import CommandCenterBodyView from '../CommandCenterBodyView';
+
+it('renders correctly', () => {
+  const tree = renderer.create(<CommandCenterBodyView />).toJSON();
+  expect(tree).toMatchSnapshot();
+});
