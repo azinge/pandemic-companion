@@ -7,14 +7,17 @@ import * as React from 'react';
 // eslint-disable-next-line
 import styles from './ActionsView.styles';
 import { Trait } from '../../../../graphql/types';
+import { useQuery } from '@apollo/react-hooks';
+import { GET_GENERAL_ACTIONS } from './ActionsView.requests';
+import { oc } from 'ts-optchain';
 
 export interface Props {}
 
 const ActionsView: React.FC = (props: Props) => {
-  const actions: Trait[] = [
-    { description: 'Drive / Ferry' },
-    { description: 'Place Supply Cubes' },
-  ];
+  const { data, loading, error } = useQuery(GET_GENERAL_ACTIONS);
+  const actions = oc(data).gameState.actions([]);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error! :(</div>;
   return (
     <div
       style={{
@@ -43,7 +46,7 @@ const ActionsView: React.FC = (props: Props) => {
           }}
         >
           <div>
-            {actions.map(action => (
+            {actions.map((action: Trait) => (
               <div>{action.description}</div>
             ))}
           </div>

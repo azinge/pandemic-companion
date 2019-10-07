@@ -3,33 +3,52 @@
  */
 
 import * as React from 'react';
-// eslint-disable-next-line
+import { oc } from 'ts-optchain';
 import { Graph } from 'react-d3-graph';
 
 // eslint-disable-next-line
 import styles from './MapView.styles';
+import { useQuery } from '@apollo/react-hooks';
+import { GET_MAP_STATE } from './MapView.requests';
+import { MapState, LocationColor } from '../../../../graphql/types';
+import { getHexColorFromLocationColor } from '../../../../utils/view-logic';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 export interface Props {}
 
-const renderGraph = () => {
-  // graph payload (with minimalist structure)
+const renderGraph = (
+  mapState: MapState,
+  dimensions: { height: number; width: number }
+) => {
   const data = {
-    nodes: [
-      { id: 'Harry', color: 'blue' },
-      { id: 'Sally', color: 'yellow' },
-      { id: 'Alice', color: 'black' },
-    ],
-    links: [
-      { source: 'Harry', target: 'Sally' },
-      { source: 'Harry', target: 'Alice' },
-    ],
+    nodes: oc(mapState)
+      .locations([])
+      .map(location => ({
+        id: location.id,
+        name: location.name,
+        color: getHexColorFromLocationColor(
+          oc(location).color(LocationColor.MISC)
+        ),
+        x: oc(location).position.x(0) * 9 + 440,
+        y: oc(location).position.y(0) * -9 + 210,
+      })),
+    links: oc(mapState)
+      .routes([])
+      .map(route => ({
+        source: oc(route).start.id(),
+        target: oc(route).end.id(),
+        strokeWidth: oc(route).isWrapping(false) ? 0.25 : 1,
+      })),
   };
 
   // the graph configuration, you only need to pass down properties
   // that you want to override, otherwise default ones will be used
   const myConfig = {
     nodeHighlightBehavior: true,
+    highlightOpacity: 0.3,
     node: {
+      labelProperty: 'name',
       fontColor: 'white',
       color: 'white',
       size: 120,
@@ -38,53 +57,9 @@ const renderGraph = () => {
     link: {
       highlightColor: 'lightblue',
     },
-  };
-
-  // graph event callbacks
-  const onClickGraph = function() {
-    // window.alert(`Clicked the graph background`);
-  };
-
-  const onClickNode = function(nodeId: any) {
-    // window.alert(`Clicked node ${nodeId}`);
-  };
-
-  // const onDoubleClickNode = function(nodeId: any) {
-  //   // window.alert(`Double clicked node ${nodeId}`);
-  // };
-
-  const onRightClickNode = function(event: any, nodeId: any) {
-    // window.alert(`Right clicked node ${nodeId}`);
-  };
-
-  const onMouseOverNode = function(nodeId: any) {
-    // window.alert(`Mouse over node ${nodeId}`);
-  };
-
-  const onMouseOutNode = function(nodeId: any) {
-    // window.alert(`Mouse out node ${nodeId}`);
-  };
-
-  const onClickLink = function(source: any, target: any) {
-    // window.alert(`Clicked link between ${source} and ${target}`);
-  };
-
-  const onRightClickLink = function(event: any, source: any, target: any) {
-    // window.alert(`Right clicked link between ${source} and ${target}`);
-  };
-
-  const onMouseOverLink = function(source: any, target: any) {
-    // window.alert(`Mouse over in link between ${source} and ${target}`);
-  };
-
-  const onMouseOutLink = function(source: any, target: any) {
-    // window.alert(`Mouse out link between ${source} and ${target}`);
-  };
-
-  const onNodePositionChange = function(nodeId: any, x: any, y: any) {
-    // window.alert(
-    //   `Node ${nodeId} is moved to new position. New position is x= ${x} y= ${y}`
-    // );
+    height: dimensions.height,
+    width: dimensions.width,
+    staticGraph: true,
   };
 
   return (
@@ -92,27 +67,33 @@ const renderGraph = () => {
       id='graph-id' // id is mandatory, if no id is defined rd3g will throw an error
       data={data}
       config={myConfig}
-      onClickNode={onClickNode}
-      onRightClickNode={onRightClickNode}
-      onClickGraph={onClickGraph}
-      onClickLink={onClickLink}
-      onRightClickLink={onRightClickLink}
-      onMouseOverNode={onMouseOverNode}
-      onMouseOutNode={onMouseOutNode}
-      onMouseOverLink={onMouseOverLink}
-      onMouseOutLink={onMouseOutLink}
-      onNodePositionChange={onNodePositionChange}
     />
   );
 };
 
 const MapView: React.FC = (props: Props) => {
+  const { data, loading, error } = useQuery(GET_MAP_STATE);
+  let div: any;
+  const [viewportDimensions, setViewportDimensions] = useState({
+    height: 0,
+    width: 0,
+  });
+  useEffect(() => {
+    setViewportDimensions({
+      height: div.clientHeight - 20,
+      width: div.clientWidth - 20,
+    });
+  }, [oc(div).clientHeight(0), oc(div).clientWidth(0)]);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error! :(</div>;
   return (
     <div
+      ref={divElement => (div = divElement)}
       style={{
         flex: 2.5,
-        padding: 10,
+        padding: 0,
         display: 'flex',
+        overflow: 'hidden',
       }}
     >
       <div
@@ -122,10 +103,13 @@ const MapView: React.FC = (props: Props) => {
           borderWidth: 10,
           borderStyle: 'solid',
           borderRadius: 10,
+          position: 'relative',
         }}
       >
-        <h1 style={{ textAlign: 'center' }}>Map:</h1>
-        {renderGraph()}
+        <h1 style={{ left: 10, textAlign: 'center', position: 'absolute' }}>
+          Map:
+        </h1>
+        {renderGraph(data.gameState.mapState, viewportDimensions)}
       </div>
     </div>
   );

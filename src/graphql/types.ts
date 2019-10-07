@@ -75,6 +75,7 @@ export interface Route extends Persistable, GQLType {
   end?: Location;
   resourcePiles?: ResourcePile[];
   tags?: Tag[];
+  isWrapping?: boolean;
 }
 
 export interface Player extends Persistable, GQLType {
@@ -87,14 +88,11 @@ export interface Player extends Persistable, GQLType {
 }
 
 export interface PlayerDeck extends GQLType {
-  stacks?: PlayerDeckStack[];
+  drawPile?: PlayerCard[];
+  drawPileSizes?: number[];
   discardPile?: PlayerCard[];
   outOfGamePile?: PlayerCard[];
   tags?: Tag[];
-}
-
-export interface PlayerDeckStack extends GQLType {
-  shuffledCards?: PlayerCard[];
 }
 
 export enum PlayerCardType {
@@ -114,7 +112,7 @@ export interface PlayerCard extends Persistable, GQLType {
 }
 
 export interface InfectionDeck extends GQLType {
-  stacks?: InfectionDeckStack[];
+  drawPileStacks?: InfectionDeckStack[];
   discardPile?: InfectionCard[];
   outOfGamePile?: InfectionCard[];
   tags?: Tag[];

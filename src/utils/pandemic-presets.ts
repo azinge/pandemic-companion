@@ -16,6 +16,7 @@ import {
 } from '../graphql/types';
 
 type LocationDictionary = { [key: string]: Location };
+type ResourceDictionary = { [key: string]: Resource };
 
 export const createEmptyMapState = () => {
   const mapState: MapState = {
@@ -34,17 +35,21 @@ export const createEmptyBoardState = () => {
     players: [],
     resourceStockpiles: [],
     infectionDeck: {
-      stacks: [],
+      __typename: 'InfectionDeck',
+      drawPileStacks: [],
       discardPile: [],
       outOfGamePile: [],
       tags: [],
     },
     playerDeck: {
-      stacks: [],
+      __typename: 'PlayerDeck',
+      drawPile: [],
+      drawPileSizes: [],
       discardPile: [],
       outOfGamePile: [],
       tags: [],
     },
+    infectionRate: 0,
   };
   return boardState;
 };
@@ -85,6 +90,7 @@ export const createPandemicBasePlayerDictionary = () => {
   };
   const baseTrait = () => ({
     __typename: 'Trait',
+    name: '',
     type: TraitType.PLAYER,
   });
   const Scientist: Player = {
@@ -205,289 +211,289 @@ export const createPandemicBaseLocationDictionary = () => {
     ...baseLocation(),
     name: 'San Francisco',
     color: LocationColor.BLUE,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -41, y: 11, __typename: 'Position' },
   };
   const Chicago: Location = {
     ...baseLocation(),
     name: 'Chicago',
     color: LocationColor.BLUE,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -33, y: 13, __typename: 'Position' },
   };
   const Atlanta: Location = {
     ...baseLocation(),
     name: 'Atlanta',
     color: LocationColor.BLUE,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -30, y: 8, __typename: 'Position' },
   };
   const Montreal: Location = {
     ...baseLocation(),
     name: 'Montreal',
     color: LocationColor.BLUE,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -26, y: 13, __typename: 'Position' },
   };
   const Washington: Location = {
     ...baseLocation(),
     name: 'Washington',
     color: LocationColor.BLUE,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -23, y: 9, __typename: 'Position' },
   };
   const New_York: Location = {
     ...baseLocation(),
     name: 'New York',
     color: LocationColor.BLUE,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -20, y: 13, __typename: 'Position' },
   };
   const Madrid: Location = {
     ...baseLocation(),
     name: 'Madrid',
     color: LocationColor.BLUE,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -9, y: 10, __typename: 'Position' },
   };
   const London: Location = {
     ...baseLocation(),
     name: 'London',
     color: LocationColor.BLUE,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -8, y: 17, __typename: 'Position' },
   };
   const Paris: Location = {
     ...baseLocation(),
     name: 'Paris',
     color: LocationColor.BLUE,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -3, y: 13, __typename: 'Position' },
   };
   const Essen: Location = {
     ...baseLocation(),
     name: 'Essen',
     color: LocationColor.BLUE,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -1, y: 18, __typename: 'Position' },
   };
   const Milan: Location = {
     ...baseLocation(),
     name: 'Milan',
     color: LocationColor.BLUE,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 2, y: 15, __typename: 'Position' },
   };
   const St_Petersburg: Location = {
     ...baseLocation(),
     name: 'St. Petersburg',
     color: LocationColor.BLUE,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 7, y: 20, __typename: 'Position' },
   };
   const Los_Angeles: Location = {
     ...baseLocation(),
     name: 'Los Angeles',
     color: LocationColor.YELLOW,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -40, y: 4, __typename: 'Position' },
   };
   const Mexico_City: Location = {
     ...baseLocation(),
     name: 'Mexico City',
     color: LocationColor.YELLOW,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -34, y: 1, __typename: 'Position' },
   };
   const Miami: Location = {
     ...baseLocation(),
     name: 'Miami',
     color: LocationColor.YELLOW,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -26, y: 3, __typename: 'Position' },
   };
   const Bogota: Location = {
     ...baseLocation(),
     name: 'Bogota',
     color: LocationColor.YELLOW,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -27, y: -4, __typename: 'Position' },
   };
   const Lima: Location = {
     ...baseLocation(),
     name: 'Lima',
     color: LocationColor.YELLOW,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -29, y: -12, __typename: 'Position' },
   };
   const Santiago: Location = {
     ...baseLocation(),
     name: 'Santiago',
     color: LocationColor.YELLOW,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -28, y: -20, __typename: 'Position' },
   };
   const Buenos_Aires: Location = {
     ...baseLocation(),
     name: 'Buenos Aires',
     color: LocationColor.YELLOW,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -21, y: -18, __typename: 'Position' },
   };
   const Sao_Paulo: Location = {
     ...baseLocation(),
     name: 'Sao Paulo',
     color: LocationColor.YELLOW,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -17, y: -13, __typename: 'Position' },
   };
   const Lagos: Location = {
     ...baseLocation(),
     name: 'Lagos',
     color: LocationColor.YELLOW,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -3, y: -3, __typename: 'Position' },
   };
   const Kinshasa: Location = {
     ...baseLocation(),
     name: 'Kinshasa',
     color: LocationColor.YELLOW,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 1, y: -8, __typename: 'Position' },
   };
   const Johannesburg: Location = {
     ...baseLocation(),
     name: 'Johannesburg',
     color: LocationColor.YELLOW,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 5, y: -15, __typename: 'Position' },
   };
   const Khartoum: Location = {
     ...baseLocation(),
     name: 'Khartoum',
     color: LocationColor.YELLOW,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 6, y: -2, __typename: 'Position' },
   };
   const Algiers: Location = {
     ...baseLocation(),
     name: 'Algiers',
     color: LocationColor.BLACK,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: -1, y: 6, __typename: 'Position' },
   };
   const Istanbul: Location = {
     ...baseLocation(),
     name: 'Istanbul',
     color: LocationColor.BLACK,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 5, y: 11, __typename: 'Position' },
   };
   const Cairo: Location = {
     ...baseLocation(),
     name: 'Cairo',
     color: LocationColor.BLACK,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 4, y: 5, __typename: 'Position' },
   };
   const Baghdad: Location = {
     ...baseLocation(),
     name: 'Baghdad',
     color: LocationColor.BLACK,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 10, y: 7, __typename: 'Position' },
   };
   const Moscow: Location = {
     ...baseLocation(),
     name: 'Moscow',
     color: LocationColor.BLACK,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 11, y: 15, __typename: 'Position' },
   };
   const Riyadh: Location = {
     ...baseLocation(),
     name: 'Riyadh',
     color: LocationColor.BLACK,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 11, y: 1, __typename: 'Position' },
   };
   const Tehran: Location = {
     ...baseLocation(),
     name: 'Tehran',
     color: LocationColor.BLACK,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 15, y: 11, __typename: 'Position' },
   };
   const Karachi: Location = {
     ...baseLocation(),
     name: 'Karachi',
     color: LocationColor.BLACK,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 16, y: 5, __typename: 'Position' },
   };
   const Mumbai: Location = {
     ...baseLocation(),
     name: 'Mumbai',
     color: LocationColor.BLACK,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 17, y: 0, __typename: 'Position' },
   };
   const Delhi: Location = {
     ...baseLocation(),
     name: 'Delhi',
     color: LocationColor.BLACK,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 21, y: 7, __typename: 'Position' },
   };
   const Chennai: Location = {
     ...baseLocation(),
     name: 'Chennai',
     color: LocationColor.BLACK,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 22, y: -4, __typename: 'Position' },
   };
   const Kolkata: Location = {
     ...baseLocation(),
     name: 'Kolkata',
     color: LocationColor.BLACK,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 26, y: 5, __typename: 'Position' },
   };
   const Beijing: Location = {
     ...baseLocation(),
     name: 'Beijing',
     color: LocationColor.RED,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 30, y: 13, __typename: 'Position' },
   };
   const Seoul: Location = {
     ...baseLocation(),
     name: 'Seoul',
     color: LocationColor.RED,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 36, y: 14, __typename: 'Position' },
   };
   const Shanghai: Location = {
     ...baseLocation(),
     name: 'Shanghai',
     color: LocationColor.RED,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 31, y: 8, __typename: 'Position' },
   };
   const Tokyo: Location = {
     ...baseLocation(),
     name: 'Tokyo',
     color: LocationColor.RED,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 41, y: 11, __typename: 'Position' },
   };
   const Hong_Kong: Location = {
     ...baseLocation(),
     name: 'Hong Kong',
     color: LocationColor.RED,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 32, y: 2, __typename: 'Position' },
   };
   const Taipei: Location = {
     ...baseLocation(),
     name: 'Taipei',
     color: LocationColor.RED,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 37, y: 4, __typename: 'Position' },
   };
   const Osaka: Location = {
     ...baseLocation(),
     name: 'Osaka',
     color: LocationColor.RED,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 42, y: 5, __typename: 'Position' },
   };
   const Bangkok: Location = {
     ...baseLocation(),
     name: 'Bangkok',
     color: LocationColor.RED,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 27, y: -1, __typename: 'Position' },
   };
   const Ho_Chi_Minh_City: Location = {
     ...baseLocation(),
     name: 'Ho Chi Minh City',
     color: LocationColor.RED,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 33, y: -6, __typename: 'Position' },
   };
   const Manila: Location = {
     ...baseLocation(),
     name: 'Manila',
     color: LocationColor.RED,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 37, y: -5, __typename: 'Position' },
   };
   const Jakarta: Location = {
     ...baseLocation(),
     name: 'Jakarta',
     color: LocationColor.RED,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 26, y: -10, __typename: 'Position' },
   };
   const Sydney: Location = {
     ...baseLocation(),
     name: 'Sydney',
     color: LocationColor.RED,
-    position: { x: 0, y: 0, __typename: 'Position' },
+    position: { x: 42, y: -19, __typename: 'Position' },
   };
   return {
     San_Francisco,
@@ -543,7 +549,11 @@ export const createPandemicBaseLocationDictionary = () => {
 
 export const createPandemicBaseRouteList = (l: LocationDictionary) => {
   let id = 1;
-  const createRoute = (start: Location, end: Location) => {
+  const createRoute = (
+    start: Location,
+    end: Location,
+    isWrapping?: boolean
+  ) => {
     return {
       __typename: 'Route',
       id: `route-${id++}`,
@@ -552,11 +562,12 @@ export const createPandemicBaseRouteList = (l: LocationDictionary) => {
       end,
       resourcePiles: [],
       tags: [],
+      isWrapping: isWrapping || false,
     };
   };
   return [
-    createRoute(l.San_Francisco, l.Tokyo),
-    createRoute(l.San_Francisco, l.Manila),
+    createRoute(l.San_Francisco, l.Tokyo, true),
+    createRoute(l.San_Francisco, l.Manila, true),
     createRoute(l.San_Francisco, l.Chicago),
     createRoute(l.San_Francisco, l.Los_Angeles),
     createRoute(l.Chicago, l.Los_Angeles),
@@ -585,7 +596,7 @@ export const createPandemicBaseRouteList = (l: LocationDictionary) => {
     createRoute(l.Milan, l.Istanbul),
     createRoute(l.St_Petersburg, l.Moscow),
     createRoute(l.St_Petersburg, l.Istanbul),
-    createRoute(l.Los_Angeles, l.Sydney),
+    createRoute(l.Los_Angeles, l.Sydney, true),
     createRoute(l.Los_Angeles, l.Mexico_City),
     createRoute(l.Mexico_City, l.Miami),
     createRoute(l.Mexico_City, l.Bogota),
@@ -598,6 +609,7 @@ export const createPandemicBaseRouteList = (l: LocationDictionary) => {
     createRoute(l.Buenos_Aires, l.Sao_Paulo),
     createRoute(l.Lagos, l.Sao_Paulo),
     createRoute(l.Lagos, l.Kinshasa),
+    createRoute(l.Lagos, l.Khartoum),
     createRoute(l.Kinshasa, l.Khartoum),
     createRoute(l.Kinshasa, l.Johannesburg),
     createRoute(l.Khartoum, l.Johannesburg),
@@ -874,6 +886,24 @@ export const createPandemicBasePlayerCardList = (
   ];
 };
 
+export const createPandemicBaseTagList = () => {
+  let id = 1;
+  const baseTag = () => {
+    return {
+      __typename: 'Tag',
+      id: `tag-${id++}`,
+      persistanceLevel: PersistanceLevel.ALWAYS,
+    };
+  };
+  return [
+    { ...baseTag(), name: 'Blue Disease Status', description: 'Not Cured' },
+    { ...baseTag(), name: 'Red Disease Status', description: 'Not Cured' },
+    { ...baseTag(), name: 'Yellow Disease Status', description: 'Not Cured' },
+    { ...baseTag(), name: 'Black Disease Status', description: 'Not Cured' },
+    { ...baseTag(), name: 'Current Infection Rate', description: '2' },
+  ];
+};
+
 export const createPandemicBaseInfectionCardList = (
   locationDictionary: LocationDictionary
 ) => {
@@ -899,6 +929,24 @@ export const createPandemicBaseInfectionCardList = (
   return infectionCards;
 };
 
+export const createPandemicBaseResourceStockpileList = (
+  resourceDictionary: ResourceDictionary
+) => {
+  let id = 1;
+  const baseResourcePile = () => {
+    return {
+      __typename: 'ResourcePile',
+      id: `resource_pile-${id++}`,
+      persistanceLevel: PersistanceLevel.ALWAYS,
+    };
+  };
+  return Object.keys(resourceDictionary).map(key => ({
+    ...baseResourcePile(),
+    resource: resourceDictionary[key],
+    count: resourceDictionary[key].stockCount,
+  }));
+};
+
 export const createPandemicBaseGameState = () => {
   const convertDictionaryToValueList = (dictionary: { [key: string]: any }) =>
     Object.keys(dictionary).map(key => dictionary[key]);
@@ -909,9 +957,15 @@ export const createPandemicBaseGameState = () => {
   const objectiveList = createPandemicBaseObjectiveList();
   const playerCardList = createPandemicBasePlayerCardList(locationDictionary);
   const routeList = createPandemicBaseRouteList(locationDictionary);
+  const tagList = createPandemicBaseTagList();
   const infectionCardList = createPandemicBaseInfectionCardList(
     locationDictionary
   );
+  const resourceStockpileList = createPandemicBaseResourceStockpileList(
+    resourceDictionary
+  );
+
+  const emptyBoardState = createEmptyBoardState();
 
   const gameState: GameState = {
     __typename: 'GameState',
@@ -926,8 +980,32 @@ export const createPandemicBaseGameState = () => {
       routes: routeList,
     },
     boardState: {
-      ...createEmptyBoardState(),
+      ...emptyBoardState,
       objectives: objectiveList,
+      // TEST DATA BELOW
+      players: [
+        playerDictionary.Researcher,
+        playerDictionary.Scientist,
+        playerDictionary.Medic,
+        playerDictionary.Dispatcher,
+      ],
+      tags: tagList,
+      resourceStockpiles: resourceStockpileList,
+      infectionDeck: {
+        ...emptyBoardState.infectionDeck,
+        drawPileStacks: [
+          {
+            __typename: 'InfectionDeckStack',
+            shuffledCards: [...infectionCardList],
+          },
+        ],
+      },
+      playerDeck: {
+        ...emptyBoardState.playerDeck,
+        drawPileSizes: [8, 8, 8, 9, 9, 9],
+        drawPile: [...playerCardList],
+      },
+      infectionRate: 2,
     },
   };
   return gameState;

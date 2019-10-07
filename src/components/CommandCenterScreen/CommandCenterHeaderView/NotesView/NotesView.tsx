@@ -7,15 +7,17 @@ import * as React from 'react';
 // eslint-disable-next-line
 import styles from './NotesView.styles';
 import { Note } from '../../../../graphql/types';
+import { GET_NOTES } from './NotesView.requests';
+import { useQuery } from '@apollo/react-hooks';
+import { oc } from 'ts-optchain';
 
 export interface Props {}
 
 const NotesView: React.FC = (props: Props) => {
-  const notes: Note[] = [
-    { description: 'Saksham is still not here :(' },
-    { description: 'Add a timer lol' },
-    { description: 'Add a randomizer' },
-  ];
+  const { data, loading, error } = useQuery(GET_NOTES);
+  const notes = oc(data).gameState.boardState.notes([]);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error! :(</div>;
   return (
     <div
       style={{
@@ -44,7 +46,7 @@ const NotesView: React.FC = (props: Props) => {
           }}
         >
           <div>
-            {notes.map(note => (
+            {notes.map((note: Note) => (
               <div>{note.description}</div>
             ))}
           </div>

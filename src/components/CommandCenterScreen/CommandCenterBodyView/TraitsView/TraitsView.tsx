@@ -6,19 +6,29 @@ import * as React from 'react';
 
 // eslint-disable-next-line
 import styles from './TraitsView.styles';
-import { Trait } from '../../../../graphql/types';
+import { Trait, Player } from '../../../../graphql/types';
+import { GET_UNIQUE_TRAITS } from './TraitsView.requests';
+import { useQuery } from '@apollo/react-hooks';
+import { oc } from 'ts-optchain';
 
 export interface Props {}
 
 const TraitsView: React.FC = (props: Props) => {
-  const playerTraits: Trait[] = [
-    { description: 'Can take 5 actions instead of 4' },
-    { description: 'Does not recieve scar while in city of plague cube' },
-  ];
-  const cardTraits: Trait[] = [
-    { description: 'Counts as 2 when building supply center' },
-    { description: 'Does not remove supply cubes' },
-  ];
+  const { data, loading, error } = useQuery(GET_UNIQUE_TRAITS);
+  const playerTraits = oc(data)
+    .gameState.boardState.players([])
+    .map((player: Player) => player.traits)
+    .reduce((acc: Trait[], cur: Trait[]) => [...acc, ...cur], []);
+  if (loading) return <div>Loading...</div>;
+  if (error) {
+    console.log(error);
+    return <div>Error! :(</div>;
+  }
+
+  // const cardTraits: Trait[] = [
+  //   { description: 'Counts as 2 when building supply center' },
+  //   { description: 'Does not remove supply cubes' },
+  // ];
   return (
     <div
       style={{
@@ -37,7 +47,7 @@ const TraitsView: React.FC = (props: Props) => {
         }}
       >
         <h1 style={{ paddingLeft: 20 }}>Traits:</h1>
-        <h3 style={{ paddingLeft: 25 }}>Player Traits:</h3>
+        {/* <h3 style={{ paddingLeft: 25 }}>Player Traits:</h3> */}
         <div
           style={{
             display: 'flex',
@@ -48,12 +58,12 @@ const TraitsView: React.FC = (props: Props) => {
           }}
         >
           <div>
-            {playerTraits.map(playerTrait => (
+            {playerTraits.map((playerTrait: Trait) => (
               <div>{playerTrait.description}</div>
             ))}
           </div>
         </div>
-        <h3 style={{ paddingLeft: 25 }}>Card Traits:</h3>
+        {/* <h3 style={{ paddingLeft: 25 }}>Card Traits:</h3>
         <div
           style={{
             display: 'flex',
@@ -68,7 +78,7 @@ const TraitsView: React.FC = (props: Props) => {
               <div>{cardTrait.description}</div>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

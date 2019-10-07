@@ -7,18 +7,19 @@ import * as React from 'react';
 // eslint-disable-next-line
 import styles from './PlayersView.styles';
 import { Player } from '../../../../graphql/types';
+import { oc } from 'ts-optchain';
+import { useQuery } from '@apollo/react-hooks';
+import { GET_PLAYERS } from './PlayersView.requests';
 
 export interface Props {
   openModal: () => void;
 }
 
 const PlayersView: React.FC<Props> = (props: Props) => {
-  const players: Player[] = [
-    { name: 'Luna' },
-    { name: 'Minerva' },
-    { name: 'Draco' },
-    { name: 'Severus' },
-  ];
+  const { data, loading, error } = useQuery(GET_PLAYERS);
+  const players = oc(data).gameState.boardState.players([]);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error! :(</div>;
   return (
     <div
       style={{
@@ -36,8 +37,7 @@ const PlayersView: React.FC<Props> = (props: Props) => {
           borderRadius: 10,
         }}
       >
-        <h1 style={{ paddingLeft: 20 }}>Players:</h1>
-        <button onClick={props.openModal}>open modal</button>
+        <h1 style={{ paddingLeft: 20, fontSize: 15 }}>Players:</h1>
         <div
           style={{
             display: 'flex',
@@ -45,11 +45,11 @@ const PlayersView: React.FC<Props> = (props: Props) => {
             justifyContent: 'space-around',
           }}
         >
-          {players.map(player => (
+          <button onClick={props.openModal}>open modal</button>
+          {players.map((player: Player) => (
             <div>
               <h3>{player.name}</h3>
-              <div>Supply Cubes: 2</div>
-              <div>Roles: A, B, C</div>
+              <div>{`Hand Size: ${oc(player).cards.length(2)}`}</div>
             </div>
           ))}
         </div>

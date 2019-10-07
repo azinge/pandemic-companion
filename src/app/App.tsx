@@ -4,23 +4,8 @@ import client from '../graphql/client';
 import AppRouter from './router';
 import './App.css';
 import { loadPandemicBaseGameState } from '../graphql/presets';
-import { gql } from 'apollo-boost';
 
 loadPandemicBaseGameState();
-
-client
-  .query({
-    query: gql`
-      {
-        gameState @client {
-          actions {
-            name
-          }
-        }
-      }
-    `,
-  })
-  .then(result => console.log(result));
 
 const App: React.FC = () => {
   return (

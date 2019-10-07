@@ -6,17 +6,22 @@ import * as React from 'react';
 
 // eslint-disable-next-line
 import styles from './InfoPanelView.styles';
-import { Resource, Tag } from '../../../../graphql/types';
+import { Tag, ResourcePile } from '../../../../graphql/types';
+import { GET_GENERAL_INFO } from './InfoPanelView.requests';
+import { useQuery } from '@apollo/react-hooks';
+import { oc } from 'ts-optchain';
 
 export interface Props {}
 
 const InfoPanelView: React.FC = (props: Props) => {
-  const resources: Resource[] = [
-    { name: 'Supply Cubes', stockCount: 32 },
-    { name: 'Plague Cubes', stockCount: 8 },
-  ];
-  const alerts: Tag[] = [{ description: 'New Mexico at risk!' }];
-  const tags: Tag[] = [{ description: 'Blue Disease Eradicated' }];
+  const { data, loading, error } = useQuery(GET_GENERAL_INFO);
+  const resourceStockpiles = oc(data).gameState.boardState.resourceStockpiles(
+    []
+  );
+  const tags = oc(data).gameState.boardState.tags([]);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error! :(</div>;
+  const alerts: Tag[] = [{ description: '' }];
   return (
     <div
       style={{
@@ -34,7 +39,9 @@ const InfoPanelView: React.FC = (props: Props) => {
           borderRadius: 10,
         }}
       >
-        <h1 style={{ textAlign: 'center' }}>Resources: - Alerts: - Tags:</h1>
+        <h1 style={{ textAlign: 'center', fontSize: 15 }}>
+          Resources: - Alerts: - Tags:
+        </h1>
         <div
           style={{
             display: 'flex',
@@ -43,8 +50,10 @@ const InfoPanelView: React.FC = (props: Props) => {
           }}
         >
           <div>
-            {resources.map(resource => (
-              <div>{`${resource.name}: ${resource.stockCount}`}</div>
+            {resourceStockpiles.map((resourceStockpile: ResourcePile) => (
+              <div>{`${oc(resourceStockpile).resource.name('')}: ${
+                resourceStockpile.count
+              } left in stock.`}</div>
             ))}
           </div>
           <div>
@@ -53,8 +62,8 @@ const InfoPanelView: React.FC = (props: Props) => {
             ))}
           </div>
           <div>
-            {tags.map(tag => (
-              <div>{tag.description}</div>
+            {tags.map((tag: Tag) => (
+              <div>{`${tag.name}: ${tag.description}`}</div>
             ))}
           </div>
         </div>

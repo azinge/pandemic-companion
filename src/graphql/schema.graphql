@@ -1,6 +1,7 @@
 extend type Query {
   isLoggedIn: Boolean!
   cartItems: [Boolean]!
+  gameState: GameState
 }
 
 extend type Mutation {
@@ -80,6 +81,7 @@ type Route implements Persistable {
   end: Location
   resourcePiles: [ResourcePile]
   tags: [Tag]
+  isWrapping: Boolean
 }
 
 type Player implements Persistable {
@@ -92,14 +94,11 @@ type Player implements Persistable {
 }
 
 type PlayerDeck {
-  stacks: [PlayerDeckStack]
+  drawPile: [PlayerCard]
+  drawPileSizes: [Int]
   discardPile: [PlayerCard]
   outOfGamePile: [PlayerCard]
   tags: [Tag]
-}
-
-type PlayerDeckStack {
-  shuffledCards: [PlayerCard]
 }
 
 enum PlayerCardType {
@@ -119,7 +118,7 @@ type PlayerCard implements Persistable {
 }
 
 type InfectionDeck {
-  stacks: [InfectionDeckStack]
+  drawPileStacks: [InfectionDeckStack]
   discardPile: [InfectionCard]
   outOfGamePile: [InfectionCard]
   tags: [Tag]

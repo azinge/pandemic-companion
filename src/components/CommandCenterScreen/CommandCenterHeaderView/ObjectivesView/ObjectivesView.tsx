@@ -7,14 +7,17 @@ import * as React from 'react';
 // eslint-disable-next-line
 import styles from './ObjectivesView.styles';
 import { Objective } from '../../../../graphql/types';
+import { GET_OBJECTIVES } from './ObjectivesView.requests';
+import { useQuery } from '@apollo/react-hooks';
+import { oc } from 'ts-optchain';
 
 export interface Props {}
 
 const ObjectivesView: React.FC = (props: Props) => {
-  const objectives: Objective[] = [
-    { description: 'Build 3 Supply Centers' },
-    { description: 'Recon North America' },
-  ];
+  const { data, loading, error } = useQuery(GET_OBJECTIVES);
+  const objectives = oc(data).gameState.boardState.objectives([]);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error! :(</div>;
   return (
     <div
       style={{
@@ -43,8 +46,10 @@ const ObjectivesView: React.FC = (props: Props) => {
           }}
         >
           <div>
-            {objectives.map(objective => (
-              <div>{objective.description}</div>
+            {objectives.map((objective: Objective) => (
+              <div>{`${objective.isMandatory ? 'Mandatory' : 'Optional'}: ${
+                objective.description
+              }`}</div>
             ))}
           </div>
         </div>
