@@ -9,10 +9,18 @@ import styles from './CommandCenterFooterView.styles';
 import PlayersView from './PlayersView';
 import PlayerDeckView from './PlayerDeckView';
 import InfectionDeckView from './InfectionDeckView';
+import { ModalName } from '../CommandCenterScreen';
 
-export interface Props {}
+export interface Props {
+  setActiveModal: (activeModal: ModalName) => void;
+}
 
-const CommandCenterFooterView: React.FC = (props: Props) => {
+const CommandCenterFooterView: React.FC<Props> = (props: Props) => {
+  const openInfectionDeckModal = () =>
+    props.setActiveModal(ModalName.INFECTION_DECK_MODAL);
+  const openPlayersModal = () => props.setActiveModal(ModalName.PLAYERS_MODAL);
+  const openPlayerDeckModal = () =>
+    props.setActiveModal(ModalName.PLAYER_DECK_MODAL);
   return (
     <div
       style={{
@@ -21,9 +29,9 @@ const CommandCenterFooterView: React.FC = (props: Props) => {
         flexDirection: 'row',
       }}
     >
-      <InfectionDeckView />
-      <PlayersView />
-      <PlayerDeckView />
+      <InfectionDeckView openModal={openInfectionDeckModal} />
+      <PlayersView openModal={openPlayersModal} />
+      <PlayerDeckView openModal={openPlayerDeckModal} />
     </div>
   );
 };

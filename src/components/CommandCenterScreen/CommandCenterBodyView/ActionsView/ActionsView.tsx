@@ -6,11 +6,15 @@ import * as React from 'react';
 
 // eslint-disable-next-line
 import styles from './ActionsView.styles';
+import { Trait } from '../../../../graphql/types';
 
 export interface Props {}
 
 const ActionsView: React.FC = (props: Props) => {
-  const actions: string[] = ['Drive / Ferry', 'Place Supply Cubes'];
+  const actions: Trait[] = [
+    { description: 'Drive / Ferry' },
+    { description: 'Place Supply Cubes' },
+  ];
   return (
     <div
       style={{
@@ -40,7 +44,7 @@ const ActionsView: React.FC = (props: Props) => {
         >
           <div>
             {actions.map(action => (
-              <div>{action}</div>
+              <div>{action.description}</div>
             ))}
           </div>
         </div>

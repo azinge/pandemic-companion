@@ -6,13 +6,17 @@ import * as React from 'react';
 
 // eslint-disable-next-line
 import styles from './InfoPanelView.styles';
+import { Resource, Tag } from '../../../../graphql/types';
 
 export interface Props {}
 
 const InfoPanelView: React.FC = (props: Props) => {
-  const resources: string[] = ['Supply Cubes: 32', 'Plague Cubes: 8'];
-  const alerts: string[] = ['New Mexico at risk!'];
-  const tags: string[] = ['Blue Disease Eradicated'];
+  const resources: Resource[] = [
+    { name: 'Supply Cubes', stockCount: 32 },
+    { name: 'Plague Cubes', stockCount: 8 },
+  ];
+  const alerts: Tag[] = [{ description: 'New Mexico at risk!' }];
+  const tags: Tag[] = [{ description: 'Blue Disease Eradicated' }];
   return (
     <div
       style={{
@@ -40,17 +44,17 @@ const InfoPanelView: React.FC = (props: Props) => {
         >
           <div>
             {resources.map(resource => (
-              <div>{resource}</div>
+              <div>{`${resource.name}: ${resource.stockCount}`}</div>
             ))}
           </div>
           <div>
             {alerts.map(alert => (
-              <div>{alert}</div>
+              <div>{alert.description}</div>
             ))}
           </div>
           <div>
             {tags.map(tag => (
-              <div>{tag}</div>
+              <div>{tag.description}</div>
             ))}
           </div>
         </div>

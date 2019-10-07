@@ -6,13 +6,14 @@ import * as React from 'react';
 
 // eslint-disable-next-line
 import styles from './ObjectivesView.styles';
+import { Objective } from '../../../../graphql/types';
 
 export interface Props {}
 
 const ObjectivesView: React.FC = (props: Props) => {
-  const objectives: string[] = [
-    'Build 3 Supply Centers',
-    'Recon North America',
+  const objectives: Objective[] = [
+    { description: 'Build 3 Supply Centers' },
+    { description: 'Recon North America' },
   ];
   return (
     <div
@@ -43,7 +44,7 @@ const ObjectivesView: React.FC = (props: Props) => {
         >
           <div>
             {objectives.map(objective => (
-              <div>{objective}</div>
+              <div>{objective.description}</div>
             ))}
           </div>
         </div>

@@ -16,6 +16,7 @@ export interface BoardState {
   resources?: [Resource];
   tags?: [Tag];
   infectionRate?: number;
+  actions?: [Trait];
 }
 
 export interface Objective extends Persistable {
@@ -138,6 +139,7 @@ export interface ResourcePile extends Persistable {
 }
 
 export interface Resource extends Persistable {
+  name?: string;
   stockCount?: number;
 }
 

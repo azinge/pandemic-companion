@@ -8,9 +8,11 @@ import * as React from 'react';
 import styles from './PlayersView.styles';
 import { Player } from '../../../../graphql/types';
 
-export interface Props {}
+export interface Props {
+  openModal: () => void;
+}
 
-const PlayersView: React.FC = (props: Props) => {
+const PlayersView: React.FC<Props> = (props: Props) => {
   const players: Player[] = [
     { name: 'Luna' },
     { name: 'Minerva' },
@@ -35,6 +37,7 @@ const PlayersView: React.FC = (props: Props) => {
         }}
       >
         <h1 style={{ paddingLeft: 20 }}>Players:</h1>
+        <button onClick={props.openModal}>open modal</button>
         <div
           style={{
             display: 'flex',

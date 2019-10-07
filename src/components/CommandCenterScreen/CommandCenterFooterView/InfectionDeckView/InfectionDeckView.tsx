@@ -6,13 +6,16 @@ import * as React from 'react';
 
 // eslint-disable-next-line
 import styles from './InfectionDeckView.styles';
+import { Tag } from '../../../../graphql/types';
 
-export interface Props {}
+export interface Props {
+  openModal: () => void;
+}
 
-const InfectionDeckView: React.FC = (props: Props) => {
-  const infectionDeckStats: string[] = [
-    '56% chance of pulling 1 New Mexico',
-    '32% chance of pulling 2 New York',
+const InfectionDeckView: React.FC<Props> = (props: Props) => {
+  const infectionDeckStats: Tag[] = [
+    { description: '56% chance of pulling 1 New Mexico' },
+    { description: '32% chance of pulling 2 New York' },
   ];
   return (
     <div
@@ -32,6 +35,7 @@ const InfectionDeckView: React.FC = (props: Props) => {
         }}
       >
         <h1 style={{ paddingLeft: 20 }}>Infection Deck:</h1>
+        <button onClick={props.openModal}>open modal</button>
         <div
           style={{
             display: 'flex',
@@ -43,7 +47,7 @@ const InfectionDeckView: React.FC = (props: Props) => {
         >
           <div>
             {infectionDeckStats.map(infectionDeckStat => (
-              <div>{infectionDeckStat}</div>
+              <div>{infectionDeckStat.description}</div>
             ))}
           </div>
         </div>

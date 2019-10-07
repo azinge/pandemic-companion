@@ -6,13 +6,16 @@ import * as React from 'react';
 
 // eslint-disable-next-line
 import styles from './PlayerDeckView.styles';
+import { Tag } from '../../../../graphql/types';
 
-export interface Props {}
+export interface Props {
+  openModal: () => void;
+}
 
-const PlayerDeckView: React.FC = (props: Props) => {
-  const playerDeckStats: string[] = [
-    '56% chance of pulling 1 Blue Card',
-    '32% chance of pulling an Epidemic',
+const PlayerDeckView: React.FC<Props> = (props: Props) => {
+  const playerDeckStats: Tag[] = [
+    { description: '56% chance of pulling 1 Blue Card' },
+    { description: '32% chance of pulling an Epidemic' },
   ];
   return (
     <div
@@ -32,6 +35,7 @@ const PlayerDeckView: React.FC = (props: Props) => {
         }}
       >
         <h1 style={{ paddingLeft: 20 }}>Player Deck:</h1>
+        <button onClick={props.openModal}>open modal</button>
         <div
           style={{
             display: 'flex',
@@ -43,7 +47,7 @@ const PlayerDeckView: React.FC = (props: Props) => {
         >
           <div>
             {playerDeckStats.map(playerDeckStat => (
-              <div>{playerDeckStat}</div>
+              <div>{playerDeckStat.description}</div>
             ))}
           </div>
         </div>

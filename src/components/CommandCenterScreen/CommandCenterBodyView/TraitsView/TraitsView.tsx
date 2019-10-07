@@ -6,17 +6,18 @@ import * as React from 'react';
 
 // eslint-disable-next-line
 import styles from './TraitsView.styles';
+import { Trait } from '../../../../graphql/types';
 
 export interface Props {}
 
 const TraitsView: React.FC = (props: Props) => {
-  const playerTraits: string[] = [
-    'Can take 5 actions instead of 4',
-    'Does not recieve scar while in city of plague cube',
+  const playerTraits: Trait[] = [
+    { description: 'Can take 5 actions instead of 4' },
+    { description: 'Does not recieve scar while in city of plague cube' },
   ];
-  const cardTraits: string[] = [
-    'Counts as 2 when building supply center',
-    'Does not remove supply cubes',
+  const cardTraits: Trait[] = [
+    { description: 'Counts as 2 when building supply center' },
+    { description: 'Does not remove supply cubes' },
   ];
   return (
     <div
@@ -48,7 +49,7 @@ const TraitsView: React.FC = (props: Props) => {
         >
           <div>
             {playerTraits.map(playerTrait => (
-              <div>{playerTrait}</div>
+              <div>{playerTrait.description}</div>
             ))}
           </div>
         </div>
@@ -64,7 +65,7 @@ const TraitsView: React.FC = (props: Props) => {
         >
           <div>
             {cardTraits.map(cardTrait => (
-              <div>{cardTrait}</div>
+              <div>{cardTrait.description}</div>
             ))}
           </div>
         </div>

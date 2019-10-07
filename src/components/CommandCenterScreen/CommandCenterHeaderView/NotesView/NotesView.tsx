@@ -6,14 +6,15 @@ import * as React from 'react';
 
 // eslint-disable-next-line
 import styles from './NotesView.styles';
+import { Note } from '../../../../graphql/types';
 
 export interface Props {}
 
 const NotesView: React.FC = (props: Props) => {
-  const notes: string[] = [
-    'Saksham is still not here :(',
-    'Add a timer lol',
-    'Add a randomizer',
+  const notes: Note[] = [
+    { description: 'Saksham is still not here :(' },
+    { description: 'Add a timer lol' },
+    { description: 'Add a randomizer' },
   ];
   return (
     <div
@@ -44,7 +45,7 @@ const NotesView: React.FC = (props: Props) => {
         >
           <div>
             {notes.map(note => (
-              <div>{note}</div>
+              <div>{note.description}</div>
             ))}
           </div>
         </div>
