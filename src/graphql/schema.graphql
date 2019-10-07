@@ -9,7 +9,6 @@ extend type Mutation {
 
 enum PersistanceLevel {
   ALWAYS
-  CAMPAIGN
   GAME
   NEVER
 }
@@ -19,21 +18,28 @@ interface Persistable {
   persistanceLevel: PersistanceLevel
 }
 
-interface GameState implements Persistable {
+interface GameState {
   boardState: BoardState
+  mapState: MapState
   players: [Player]
   playerCards: [PlayerCard]
   infectionCards: [InfectionCard]
+  resources: [Resource]
+  actions: [Trait]
 }
 
-interface BoardState implements Persistable {
+interface MapState {
+  locations: [Location]
+  routes: [Route]
+}
+
+interface BoardState {
   objectives: [Objective]
   notes: [Note]
-  resources: [Resource]
   tags: [Tag]
   infectionRate: Int
-  actions: [Trait]
   players: [Player]
+  resourceStockpiles: [ResourcePile]
   infectionDeck: InfectionDeck
   playerDeck: PlayerDeck
 }
@@ -60,7 +66,6 @@ type Location implements Persistable {
   name: String
   position: Position
   color: LocationColor
-  routes: [Route]
   resourcePiles: [ResourcePile]
   tags: [Tag]
 }
@@ -89,6 +94,7 @@ type Player implements Persistable {
 type PlayerDeck {
   stacks: [PlayerDeckStack]
   discardPile: [PlayerCard]
+  outOfGamePile: [PlayerCard]
   tags: [Tag]
 }
 
@@ -115,6 +121,7 @@ type PlayerCard implements Persistable {
 type InfectionDeck {
   stacks: [InfectionDeckStack]
   discardPile: [InfectionCard]
+  outOfGamePile: [InfectionCard]
   tags: [Tag]
 }
 
@@ -124,8 +131,6 @@ type InfectionDeckStack {
 
 enum InfectionCardType {
   LOCATION
-  EVENT
-  EPIDEMIC
   MISC
 }
 

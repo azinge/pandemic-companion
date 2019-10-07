@@ -61,8 +61,6 @@ const CommandCenterScreen: React.FC<Props> = (props: Props) => {
     });
   };
 
-  console.log(modalStates);
-
   return (
     <div
       style={{
