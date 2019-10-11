@@ -3,9 +3,9 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import client from '../graphql/client';
 import AppRouter from './router';
 import './App.css';
-import { loadPandemicBaseGameState } from '../graphql/presets';
+// import { loadPandemicBaseGameState } from '../graphql/presets';
 
-loadPandemicBaseGameState();
+// loadPandemicBaseGameState();
 
 const App: React.FC = () => {
   return (

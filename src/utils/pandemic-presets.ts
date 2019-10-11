@@ -17,6 +17,7 @@ import {
 
 type LocationDictionary = { [key: string]: Location };
 type ResourceDictionary = { [key: string]: Resource };
+type PlayerDictionary = { [key: string]: Resource };
 
 export const createEmptyMapState = () => {
   const mapState: MapState = {
@@ -706,12 +707,9 @@ export const createPandemicBaseResourceDictionary = () => {
 };
 
 export const createPandemicBaseActionDictionary = () => {
-  let id = 1;
   const baseAction = () => {
     return {
       __typename: 'Trait',
-      id: `action-${id++}`,
-      persistanceLevel: PersistanceLevel.ALWAYS,
       type: TraitType.PLAYER,
     };
   };
@@ -805,6 +803,12 @@ export const createPandemicBasePlayerCardList = (
       persistanceLevel: PersistanceLevel.ALWAYS,
       traits: [],
       tags: [],
+      location: {
+        __typename: 'Location',
+        color: LocationColor.MISC,
+      },
+      description: '',
+      name: '',
     };
   };
   const createEpidemicPlayerCards = () => {
@@ -947,6 +951,51 @@ export const createPandemicBaseResourceStockpileList = (
   }));
 };
 
+export const createPandemicBaseBoardState = (
+  infectionCardList: InfectionCard[],
+  playerCardList: PlayerCard[],
+  playerDictionary: PlayerDictionary,
+  resourceDictionary: ResourceDictionary
+) => {
+  const emptyBoardState = createEmptyBoardState();
+  const objectiveList = createPandemicBaseObjectiveList();
+  const tagList = createPandemicBaseTagList();
+  const resourceStockpileList = createPandemicBaseResourceStockpileList(
+    resourceDictionary
+  );
+  const boardState = {
+    ...emptyBoardState,
+    objectives: objectiveList,
+    players: [
+      // TODO(azinge): Clear this.
+      playerDictionary.Researcher,
+      playerDictionary.Scientist,
+      playerDictionary.Medic,
+      playerDictionary.Dispatcher,
+    ],
+    tags: tagList,
+    resourceStockpiles: resourceStockpileList,
+    infectionDeck: {
+      // TODO(azinge): Clear this.
+      ...emptyBoardState.infectionDeck,
+      drawPileStacks: [
+        {
+          __typename: 'InfectionDeckStack',
+          shuffledCards: [...infectionCardList],
+        },
+      ],
+    },
+    playerDeck: {
+      // TODO(azinge): Clear this.
+      ...emptyBoardState.playerDeck,
+      drawPileSizes: [8, 8, 8, 9, 9, 9],
+      drawPile: [...playerCardList],
+    },
+    infectionRate: 2,
+  };
+  return boardState;
+};
+
 export const createPandemicBaseGameState = () => {
   const convertDictionaryToValueList = (dictionary: { [key: string]: any }) =>
     Object.keys(dictionary).map(key => dictionary[key]);
@@ -954,18 +1003,12 @@ export const createPandemicBaseGameState = () => {
   const locationDictionary = createPandemicBaseLocationDictionary();
   const actionDictionary = createPandemicBaseActionDictionary();
   const resourceDictionary = createPandemicBaseResourceDictionary();
-  const objectiveList = createPandemicBaseObjectiveList();
+
   const playerCardList = createPandemicBasePlayerCardList(locationDictionary);
   const routeList = createPandemicBaseRouteList(locationDictionary);
-  const tagList = createPandemicBaseTagList();
   const infectionCardList = createPandemicBaseInfectionCardList(
     locationDictionary
   );
-  const resourceStockpileList = createPandemicBaseResourceStockpileList(
-    resourceDictionary
-  );
-
-  const emptyBoardState = createEmptyBoardState();
 
   const gameState: GameState = {
     __typename: 'GameState',
@@ -979,34 +1022,12 @@ export const createPandemicBaseGameState = () => {
       locations: convertDictionaryToValueList(locationDictionary),
       routes: routeList,
     },
-    boardState: {
-      ...emptyBoardState,
-      objectives: objectiveList,
-      // TEST DATA BELOW
-      players: [
-        playerDictionary.Researcher,
-        playerDictionary.Scientist,
-        playerDictionary.Medic,
-        playerDictionary.Dispatcher,
-      ],
-      tags: tagList,
-      resourceStockpiles: resourceStockpileList,
-      infectionDeck: {
-        ...emptyBoardState.infectionDeck,
-        drawPileStacks: [
-          {
-            __typename: 'InfectionDeckStack',
-            shuffledCards: [...infectionCardList],
-          },
-        ],
-      },
-      playerDeck: {
-        ...emptyBoardState.playerDeck,
-        drawPileSizes: [8, 8, 8, 9, 9, 9],
-        drawPile: [...playerCardList],
-      },
-      infectionRate: 2,
-    },
+    boardState: createPandemicBaseBoardState(
+      infectionCardList,
+      playerCardList,
+      playerDictionary,
+      resourceDictionary
+    ),
   };
   return gameState;
 };

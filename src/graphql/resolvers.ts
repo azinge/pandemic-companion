@@ -1,18 +1,41 @@
-import { gql } from 'apollo-boost';
+import {
+  getGameState,
+  saveInfectionDeck,
+  savePlayerDeck,
+} from '../utils/store';
 
 export const resolvers = {
-  // Mutation: {
-  //   // toggleTodo: (_root: any, variables: any, { cache, getCacheKey }: any) => {
-  //   //   const id = getCacheKey({ __typename: 'TodoItem', id: variables.id });
-  //   //   const fragment = gql`
-  //   //     fragment completeTodo on TodoItem {
-  //   //       completed
-  //   //     }
-  //   //   `;
-  //   //   const todo = cache.readFragment({ fragment, id });
-  //   //   const data = { ...todo, completed: !todo.completed };
-  //   //   cache.writeData({ id, data });
-  //   //   return null;
-  //   // },
-  // },
+  Query: {
+    gameState: (_root: any, variables: any, { cache, getCacheKey }: any) => {
+      return getGameState();
+    },
+  },
+  Mutation: {
+    saveInfectionDeck: (
+      _root: any,
+      variables: any,
+      { cache, getCacheKey }: any
+    ) => {
+      saveInfectionDeck(
+        variables.srcDropId,
+        variables.srcIndex,
+        variables.dstDropId,
+        variables.dstIndex
+      );
+      return getGameState();
+    },
+    savePlayerDeck: (
+      _root: any,
+      variables: any,
+      { cache, getCacheKey }: any
+    ) => {
+      savePlayerDeck(
+        variables.srcDropId,
+        variables.srcIndex,
+        variables.dstDropId,
+        variables.dstIndex
+      );
+      return getGameState();
+    },
+  },
 };
