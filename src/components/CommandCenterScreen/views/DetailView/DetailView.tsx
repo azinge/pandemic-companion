@@ -7,6 +7,9 @@ import * as React from 'react';
 // eslint-disable-next-line
 import styles from './DetailView.styles';
 import { oc } from 'ts-optchain';
+import LocationDetailView from './LocationDetailView';
+import RouteDetailView from './RouteDetailView';
+import PlayerDetailView from './PlayerDetailView';
 
 export interface Props {
   selectedItem: any;
@@ -21,15 +24,17 @@ const DetailView: React.FC<Props> = (props: Props) => {
           <div>
             {`Location - 
             ${oc(selectedItem)({}).name}`}
+            <LocationDetailView />
           </div>
         );
       case 'Route':
         return (
           <div>
             {`Route - 
-            ${oc(selectedItem).start({}).name} -> ${
+            ${oc(selectedItem).start({}).name} <-> ${
               oc(selectedItem).end({}).name
             }`}
+            <RouteDetailView />
           </div>
         );
       case 'Player':
@@ -37,9 +42,10 @@ const DetailView: React.FC<Props> = (props: Props) => {
           <div>
             {`Player - 
           ${oc(selectedItem)({}).name}`}
+            <PlayerDetailView />
           </div>
         );
-      case 'Default':
+      default:
         return <div>Select an Item to see it's stats</div>;
     }
   };

@@ -981,7 +981,11 @@ export const createPandemicBaseBoardState = (
       drawPileStacks: [
         {
           __typename: 'InfectionDeckStack',
-          shuffledCards: [...infectionCardList],
+          shuffledCards: [...infectionCardList.slice(0, 10)],
+        },
+        {
+          __typename: 'InfectionDeckStack',
+          shuffledCards: [...infectionCardList.slice(10)],
         },
       ],
     },

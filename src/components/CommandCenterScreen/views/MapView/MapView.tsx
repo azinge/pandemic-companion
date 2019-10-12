@@ -46,9 +46,8 @@ const renderGraph = (
     height: '100%', // dimensions.height,
     width: '100%', //dimensions.width,
     staticGraph: true,
-    maxZoom: 1.5,
-    minZoom: 0.2,
-    focusZoom: 0.2,
+    maxZoom: 3,
+    minZoom: 0.6,
   };
 
   const onClickNode = (nodeId: string) => {
@@ -65,7 +64,6 @@ const renderGraph = (
     )[0];
     setSelectedItem(selectedRoute);
   };
-
   return (
     <Graph
       id='graph-id' // id is mandatory, if no id is defined rd3g will throw an error

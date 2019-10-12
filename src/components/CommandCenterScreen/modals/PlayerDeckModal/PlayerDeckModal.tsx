@@ -21,7 +21,6 @@ import {
   GET_PLAYER_DECK,
   SAVE_PLAYER_DECK,
 } from '../../views/PlayerDeckView/PlayerDeckView.requests';
-import { saveGameState, loadGameState } from '../../../../utils/store';
 
 export interface Props {
   closeModal: () => void;
@@ -89,15 +88,12 @@ const createPlayerHands = (players: Player[]) => {
   ));
 };
 
-type PlayerCardListMap = {
-  [key: string]: PlayerCard[];
-};
-
+Modal.setAppElement('#root');
 const PlayerDeckModal: React.FC<Props> = (props: Props) => {
   const [savePlayerDeck] = useMutation(SAVE_PLAYER_DECK, {
     refetchQueries: () => ['GET_PLAYER_DECK'],
   });
-  const { data, refetch } = useQuery(GET_PLAYER_DECK);
+  const { data } = useQuery(GET_PLAYER_DECK);
 
   const onDragEnd = React.useCallback(
     (result, provided) => {
@@ -130,15 +126,6 @@ const PlayerDeckModal: React.FC<Props> = (props: Props) => {
       <div>
         <h1>PlayerDeckModal</h1>
         <button onClick={props.closeModal}>close modal</button>
-        <button onClick={saveGameState}>saveGameState</button>
-        <button
-          onClick={() => {
-            loadGameState();
-            refetch();
-          }}
-        >
-          loadGameState
-        </button>
         <DragDropContext onDragEnd={onDragEnd}>
           <div
             style={{

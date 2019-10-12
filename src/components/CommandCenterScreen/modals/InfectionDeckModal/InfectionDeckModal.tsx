@@ -12,6 +12,7 @@ import {
   InfectionCard,
   InfectionDeck,
   LocationColor,
+  InfectionDeckStack,
 } from '../../../../graphql/types';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import {
@@ -21,7 +22,6 @@ import {
 import { oc } from 'ts-optchain';
 import { getHexColorFromLocationColor } from '../../../../utils/view-logic';
 import { useCallback } from 'react';
-import { saveGameState, loadGameState } from '../../../../utils/store';
 
 export interface Props {
   closeModal: () => void;
@@ -59,14 +59,46 @@ const createInfectionCard = (card: InfectionCard, index: number) => {
   );
 };
 
+const createDrawPileStacks = (drawPileStacks: InfectionDeckStack[]) => {
+  return drawPileStacks.map((drawPileStack, index) => (
+    <Droppable
+      droppableId={`Draw_Pile_Stack:${index}`}
+      type={'INFECTION_CARD'}
+      key={`${index}`}
+    >
+      {(provided, snapshot) => (
+        <div
+          ref={provided.innerRef}
+          style={{
+            minHeight: 50,
+            borderStyle: 'solid',
+            borderColor: 'grey',
+          }}
+          {...provided.droppableProps}
+        >
+          {oc(drawPileStack)
+            .shuffledCards([])
+            .map((card, index) => {
+              console.log(card);
+              return createInfectionCard(card, index);
+            })}
+          {provided.placeholder}
+        </div>
+      )}
+    </Droppable>
+  ));
+};
+
+Modal.setAppElement('#root');
 const InfectionDeckModal: React.FC<Props> = (props: Props) => {
   const [saveInfectionDeck] = useMutation(SAVE_INFECTION_DECK, {
     refetchQueries: () => ['GET_INFECTION_DECK'],
   });
-  const { data, refetch } = useQuery(GET_INFECTION_DECK);
+  const { data } = useQuery(GET_INFECTION_DECK);
   const infectionDeck: InfectionDeck = oc(
     data
-  ).gameState.boardState.infectionDeck();
+  ).gameState.boardState.infectionDeck({});
+  const drawPileStacks = oc(infectionDeck).drawPileStacks([]);
 
   const onDragEnd = useCallback(
     (result, provided) => {
@@ -84,7 +116,6 @@ const InfectionDeckModal: React.FC<Props> = (props: Props) => {
   );
 
   const droppableDict = {
-    Draw_Pile: oc(infectionDeck).drawPileStacks[0].shuffledCards([]),
     Discard_Pile: oc(infectionDeck).discardPile([]),
     Out_Of_Game_Pile: oc(infectionDeck).outOfGamePile([]),
   };
@@ -98,15 +129,6 @@ const InfectionDeckModal: React.FC<Props> = (props: Props) => {
       <div>
         <h1>InfectionDeckModal</h1>
         <button onClick={props.closeModal}>close modal</button>
-        <button onClick={saveGameState}>saveGameState</button>
-        <button
-          onClick={() => {
-            loadGameState();
-            refetch();
-          }}
-        >
-          loadGameState
-        </button>
         <DragDropContext onDragEnd={onDragEnd}>
           <div
             style={{
@@ -126,25 +148,7 @@ const InfectionDeckModal: React.FC<Props> = (props: Props) => {
               }}
             >
               Draw Pile
-              <Droppable droppableId={'Draw_Pile'} type={'INFECTION_CARD'}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    style={{
-                      minHeight: 50,
-                      borderStyle: 'solid',
-                      borderColor: 'grey',
-                      flex: 1,
-                    }}
-                    {...provided.droppableProps}
-                  >
-                    {droppableDict['Draw_Pile'].map((card, index) => {
-                      return createInfectionCard(card, index);
-                    })}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
+              {createDrawPileStacks(drawPileStacks)}
             </div>
             <div
               style={{

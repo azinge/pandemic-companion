@@ -31,9 +31,10 @@ const InfectionDeckView: React.FC<Props> = (props: Props) => {
       } cards at the top of the deck.`,
     },
     {
-      description: `${(1 / drawPileStacks[0].shuffledCards.length) *
+      description: `${(1 /
+        drawPileStacks[drawPileStacks.length - 1].shuffledCards.length) *
         100} % chance of drawing any of the ${
-        drawPileStacks[0].shuffledCards.length
+        drawPileStacks[drawPileStacks.length - 1].shuffledCards.length
       } cards at the bottom of the deck.`,
     },
   ];

@@ -24,6 +24,7 @@ export interface Props {
   isOpen: boolean;
 }
 
+Modal.setAppElement('#root');
 const SettingsModal: React.FC<Props> = (props: Props) => {
   return (
     <Modal

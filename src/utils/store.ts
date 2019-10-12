@@ -25,13 +25,16 @@ export const saveInfectionDeck = (
 ) => {
   const infectionDeck = oc(gameState).boardState.infectionDeck({});
   const arrMap: InfectionCardListMap = {
-    Draw_Pile: oc(infectionDeck).drawPileStacks[0].shuffledCards([]),
     Discard_Pile: oc(infectionDeck).discardPile([]),
     Out_Of_Game_Pile: oc(infectionDeck).outOfGamePile([]),
   };
+  oc(infectionDeck)
+    .drawPileStacks([])
+    .forEach((drawPileStack, index) => {
+      arrMap[`Draw_Pile_Stack:${index}`] = oc(drawPileStack).shuffledCards([]);
+    });
   const a = arrMap[srcDropId].splice(srcIndex, 1)[0];
   arrMap[dstDropId].splice(dstIndex, 0, a);
-  console.log(gameState);
   return gameState;
 };
 
@@ -54,7 +57,6 @@ export const savePlayerDeck = (
     });
   const a = arrMap[srcDropId].splice(srcIndex, 1)[0];
   arrMap[dstDropId].splice(dstIndex, 0, a);
-  console.log(gameState);
   return gameState;
 };
 
@@ -66,5 +68,4 @@ export const loadGameState = () => {
   const temp = window.localStorage.getItem('game-state');
   if (temp === null) return;
   gameState = parse(temp);
-  console.log(gameState);
 };

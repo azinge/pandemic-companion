@@ -21,7 +21,7 @@ const InfoPanelView: React.FC = (props: Props) => {
   const tags = oc(data).gameState.boardState.tags([]);
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error! :(</div>;
-  const alerts: Tag[] = [{ id: 'test', description: '' }];
+  const alerts: Tag[] = [{ id: 'test', description: 'New Mexico at risk!' }];
   return (
     <div
       style={{

@@ -19,6 +19,8 @@ import PlayerDeckView from './views/PlayerDeckView';
 import ObjectivesView from './views/ObjectivesView';
 import InfoPanelView from './views/InfoPanelView';
 import NotesView from './views/NotesView';
+import { saveGameState, loadGameState } from '../../utils/store';
+import client from '../../graphql/client';
 
 export interface Props {}
 
@@ -97,6 +99,15 @@ const CommandCenterScreen: React.FC<Props> = (props: Props) => {
       >
         <h2>Pandemic Companion</h2>
         <button onClick={openSettingsModal}>open modal</button>
+        <button onClick={saveGameState}>saveGameState</button>
+        <button
+          onClick={() => {
+            loadGameState();
+            client.resetStore();
+          }}
+        >
+          loadGameState
+        </button>
       </div>
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         <ObjectivesView />
