@@ -28,10 +28,7 @@ const PlayerDeckView: React.FC<Props> = (props: Props) => {
   });
   const playerDeckStats: Tag[] = [
     {
-      description: `${1 / drawPile.length +
-        ((((drawPile.length - 1) / drawPile.length) * 1) /
-          (drawPile.length - 1)) *
-          100} % chance of drawing an epidemic after current turn.`,
+      description: `${drawPile.length} cards left in deck.`,
     },
     {
       description: `${numEventCardsInDrawPile} more event cards left in the draw pile.`,

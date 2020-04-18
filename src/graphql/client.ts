@@ -7,7 +7,7 @@ const client = new ApolloClient({
 });
 client.defaultOptions = {
   watchQuery: {
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     errorPolicy: 'all',
   },
   query: {

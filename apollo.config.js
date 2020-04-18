@@ -3,7 +3,6 @@ module.exports = {
     name: 'pandemic-companion',
     service: {
       endpoint: null,
-      localSchemaFile: './src/graphql/schema.graphql',
     },
     tagName: 'graphql',
     includes: ['src/**/*.{ts,tsx}'],

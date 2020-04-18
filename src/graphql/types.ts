@@ -143,17 +143,10 @@ export enum TraitType {
   MISC,
 }
 
-export interface Trait extends GQLType {
+export interface Trait extends Persistable, GQLType {
   name?: string;
   description?: string;
   type?: TraitType;
-}
-
-export interface Collection extends Persistable, GQLType {
-  name?: string;
-  condition?: Condition;
-  description?: string;
-  tags?: Tag[];
 }
 
 export interface ResourcePile extends Persistable, GQLType {
@@ -170,9 +163,4 @@ export interface Resource extends Persistable, GQLType {
 export interface Tag extends Persistable, GQLType {
   name?: string;
   description?: string;
-  condition?: Condition;
-}
-
-export interface Condition extends GQLType {
-  query?: string;
 }

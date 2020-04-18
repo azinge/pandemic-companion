@@ -18,6 +18,7 @@ import PlayerSettingsPanel from './PlayerSettingsPanel';
 import LocationSettingsPanel from './LocationSettingsPanel';
 import InfectionCardSettingsPanel from './InfectionCardSettingsPanel';
 import PlayerCardSettingsPanel from './PlayerCardSettingsPanel';
+import './SettingsModal.css';
 
 export interface Props {
   closeModal: () => void;
@@ -32,25 +33,34 @@ const SettingsModal: React.FC<Props> = (props: Props) => {
       onRequestClose={props.closeModal}
       contentLabel='Settings'
     >
-      <div>
+      <div
+        style={{
+          height: '100%',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <h1>SettingsModal</h1>
         <button onClick={props.closeModal}>close modal</button>
         <Tabs>
           <div
             style={{
+              flex: 1,
               display: 'flex',
               flexDirection: 'row',
-              minHeight: 700,
+              minHeight: '700',
+              overflow: 'hidden',
             }}
           >
             <div
               style={{
-                flex: 1,
                 borderStyle: 'solid',
                 margin: 5,
                 padding: 5,
                 flexDirection: 'column',
                 display: 'flex',
+                overflow: 'hidden',
               }}
             >
               Tabs
@@ -75,6 +85,7 @@ const SettingsModal: React.FC<Props> = (props: Props) => {
                 padding: 5,
                 flexDirection: 'column',
                 display: 'flex',
+                overflow: 'hidden',
               }}
             >
               Settings

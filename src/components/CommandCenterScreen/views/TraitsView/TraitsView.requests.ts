@@ -17,3 +17,21 @@ export const GET_GENERAL_ACTIONS = gql`
     }
   }
 `;
+
+export const CREATE_GLOBAL_ACTION = gql`
+  mutation CREATE_GLOBAL_ACTION {
+    createGlobalAction @client
+  }
+`;
+
+export const UPDATE_GLOBAL_ACTION = gql`
+  mutation UPDATE_GLOBAL_ACTION($id: ID, $data: Action) {
+    updateGlobalAction(id: $id, data: $data) @client
+  }
+`;
+
+export const DELETE_GLOBAL_ACTION = gql`
+  mutation DELETE_GLOBAL_ACTION($id: ID) {
+    deleteGlobalAction(id: $id) @client
+  }
+`;

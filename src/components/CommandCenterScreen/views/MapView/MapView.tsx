@@ -8,8 +8,8 @@ import { Graph } from 'react-d3-graph';
 
 // eslint-disable-next-line
 import styles from './MapView.styles';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_MAP_STATE } from './MapView.requests';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import { GET_MAP_STATE, UPDATE_LOCATION_POSITION } from './MapView.requests';
 import { MapState, LocationColor } from '../../../../graphql/types';
 import { getHexColorFromLocationColor } from '../../../../utils/view-logic';
 import './MapView.css';
@@ -18,13 +18,13 @@ import { useState } from 'react';
 
 export interface Props {
   setSelectedItem: (item: any) => void;
-  selectedItem: any;
 }
 
 const renderGraph = (
   mapState: MapState,
   graphData: any,
-  setSelectedItem: (item: any) => void
+  setSelectedItem: (item: any) => void,
+  updateLocationPosition: (id: string, x: number, y: number) => void
 ) => {
   const locations = oc(mapState).locations([]);
   const routes = oc(mapState).routes([]);
@@ -45,7 +45,8 @@ const renderGraph = (
     },
     height: '100%', // dimensions.height,
     width: '100%', //dimensions.width,
-    staticGraph: true,
+    // staticGraph: true,
+    staticGraphWithDragAndDrop: true,
     maxZoom: 3,
     minZoom: 0.6,
   };
@@ -64,6 +65,12 @@ const renderGraph = (
     )[0];
     setSelectedItem(selectedRoute);
   };
+
+  // const onNodePositionChange = (nodeId: string, x: number, y: number) => {
+  //   console.log
+  //   updateLocationPosition(nodeId, (x - 440) / 9, (y - 210) / -9);
+  // };
+
   return (
     <Graph
       id='graph-id' // id is mandatory, if no id is defined rd3g will throw an error
@@ -71,12 +78,16 @@ const renderGraph = (
       config={myConfig}
       onClickNode={onClickNode}
       onClickLink={onClickLink}
+      // onNodePositionChange={onNodePositionChange}
     />
   );
 };
 
 const MapView: React.FC<Props> = (props: Props) => {
   const { data, loading, error } = useQuery(GET_MAP_STATE);
+  const [updateLocationPosition] = useMutation(UPDATE_LOCATION_POSITION, {
+    refetchQueries: () => ['GET_MAP_STATE'],
+  });
   const [graphData, setGraphData] = useState<any>({
     nodes: [{ id: '' }],
     links: [],
@@ -127,7 +138,20 @@ const MapView: React.FC<Props> = (props: Props) => {
         <div style={{ left: 10, textAlign: 'center', position: 'absolute' }}>
           <h1>Map:</h1>
         </div>
-        {renderGraph(data.gameState.mapState, graphData, props.setSelectedItem)}
+        {renderGraph(
+          data.gameState.mapState,
+          graphData,
+          props.setSelectedItem,
+          (id, x, y) => {
+            updateLocationPosition({
+              variables: {
+                id,
+                x,
+                y,
+              },
+            });
+          }
+        )}
       </div>
     </div>
   );

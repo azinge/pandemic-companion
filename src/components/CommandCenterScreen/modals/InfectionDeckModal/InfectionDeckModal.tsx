@@ -18,9 +18,11 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 import {
   GET_INFECTION_DECK,
   SAVE_INFECTION_DECK,
+  CREATE_INFECTION_DECK_STACK,
+  DELETE_INFECTION_DECK_STACK,
 } from '../../views/InfectionDeckView/InfectionDeckView.requests';
 import { oc } from 'ts-optchain';
-import { getHexColorFromLocationColor } from '../../../../utils/view-logic';
+import { getLightHexColorFromLocationColor } from '../../../../utils/view-logic';
 import { useCallback } from 'react';
 
 export interface Props {
@@ -45,13 +47,16 @@ const createInfectionCard = (card: InfectionCard, index: number) => {
           >
             <div
               style={{
-                backgroundColor: getHexColorFromLocationColor(
+                backgroundColor: getLightHexColorFromLocationColor(
                   oc(card).location.color(LocationColor.MISC)
                 ),
                 height: 25,
                 width: 500,
+                color: 'black',
               }}
-            />
+            >
+              {card.name}
+            </div>
           </div>
         );
       }}
@@ -59,7 +64,10 @@ const createInfectionCard = (card: InfectionCard, index: number) => {
   );
 };
 
-const createDrawPileStacks = (drawPileStacks: InfectionDeckStack[]) => {
+const createDrawPileStacks = (
+  drawPileStacks: InfectionDeckStack[],
+  deleteInfectionDeckStack: (index: number) => void
+) => {
   return drawPileStacks.map((drawPileStack, index) => (
     <Droppable
       droppableId={`Draw_Pile_Stack:${index}`}
@@ -79,10 +87,12 @@ const createDrawPileStacks = (drawPileStacks: InfectionDeckStack[]) => {
           {oc(drawPileStack)
             .shuffledCards([])
             .map((card, index) => {
-              console.log(card);
               return createInfectionCard(card, index);
             })}
           {provided.placeholder}
+          <button onClick={() => deleteInfectionDeckStack(index)}>
+            delete stack
+          </button>
         </div>
       )}
     </Droppable>
@@ -94,7 +104,15 @@ const InfectionDeckModal: React.FC<Props> = (props: Props) => {
   const [saveInfectionDeck] = useMutation(SAVE_INFECTION_DECK, {
     refetchQueries: () => ['GET_INFECTION_DECK'],
   });
-  const { data } = useQuery(GET_INFECTION_DECK);
+  const [createInfectionDeckStack] = useMutation(CREATE_INFECTION_DECK_STACK, {
+    refetchQueries: () => ['GET_INFECTION_DECK'],
+  });
+  const [deleteInfectionDeckStack] = useMutation(DELETE_INFECTION_DECK_STACK, {
+    refetchQueries: () => ['GET_INFECTION_DECK'],
+  });
+  const { data } = useQuery(GET_INFECTION_DECK, {
+    fetchPolicy: 'no-cache',
+  });
   const infectionDeck: InfectionDeck = oc(
     data
   ).gameState.boardState.infectionDeck({});
@@ -148,7 +166,16 @@ const InfectionDeckModal: React.FC<Props> = (props: Props) => {
               }}
             >
               Draw Pile
-              {createDrawPileStacks(drawPileStacks)}
+              <button
+                onClick={() => {
+                  createInfectionDeckStack();
+                }}
+              >
+                Create Draw Stack
+              </button>
+              {createDrawPileStacks(drawPileStacks, (index: number) => {
+                deleteInfectionDeckStack({ variables: { index } });
+              })}
             </div>
             <div
               style={{

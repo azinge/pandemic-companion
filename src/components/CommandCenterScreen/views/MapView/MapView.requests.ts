@@ -29,3 +29,9 @@ export const GET_MAP_STATE = gql`
     }
   }
 `;
+
+export const UPDATE_LOCATION_POSITION = gql`
+  mutation UPDATE_LOCATION_POSITION($id: ID, $x: Float, $y: Float) {
+    updateLocationPosition(id: $id, x: $x, y: $y) @client
+  }
+`;

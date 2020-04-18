@@ -1,0 +1,7 @@
+.react-tabs__tab-panel--selected {
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  flex: 1;
+}

@@ -15,7 +15,7 @@ import {
 } from '../../../../graphql/types';
 import { oc } from 'ts-optchain';
 import { Draggable, DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { getHexColorFromLocationColor } from '../../../../utils/view-logic';
+import { getLightHexColorFromLocationColor } from '../../../../utils/view-logic';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import {
   GET_PLAYER_DECK,
@@ -43,13 +43,15 @@ const createPlayerCard = (card: PlayerCard, index: number) => {
           >
             <div
               style={{
-                backgroundColor: getHexColorFromLocationColor(
+                backgroundColor: getLightHexColorFromLocationColor(
                   oc(card).location.color(LocationColor.MISC)
                 ),
                 height: 25,
                 width: 500,
               }}
-            />
+            >
+              {card.name}
+            </div>
           </div>
         );
       }}
@@ -93,7 +95,9 @@ const PlayerDeckModal: React.FC<Props> = (props: Props) => {
   const [savePlayerDeck] = useMutation(SAVE_PLAYER_DECK, {
     refetchQueries: () => ['GET_PLAYER_DECK'],
   });
-  const { data } = useQuery(GET_PLAYER_DECK);
+  const { data } = useQuery(GET_PLAYER_DECK, {
+    fetchPolicy: 'no-cache',
+  });
 
   const onDragEnd = React.useCallback(
     (result, provided) => {

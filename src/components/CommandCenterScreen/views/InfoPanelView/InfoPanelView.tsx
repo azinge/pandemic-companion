@@ -54,9 +54,9 @@ const InfoPanelView: React.FC = (props: Props) => {
             {resourceStockpiles.map((resourceStockpile: ResourcePile) => (
               <div key={resourceStockpile.id}>{`${oc(
                 resourceStockpile
-              ).resource.name('')}: ${
-                resourceStockpile.count
-              } left in stock.`}</div>
+              ).resource.name('')}: ${oc(resourceStockpile).resource.stockCount(
+                0
+              )} left in stock.`}</div>
             ))}
           </div>
           <div>

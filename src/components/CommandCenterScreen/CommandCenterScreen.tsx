@@ -116,10 +116,7 @@ const CommandCenterScreen: React.FC<Props> = (props: Props) => {
       </div>
       <div style={{ flex: 2, display: 'flex', overflow: 'hidden' }}>
         <TraitsView />
-        <MapView
-          setSelectedItem={setSelectedItem}
-          selectedItem={selectedItem}
-        />
+        <MapView setSelectedItem={setSelectedItem} />
         <DetailView selectedItem={selectedItem} />
       </div>
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>

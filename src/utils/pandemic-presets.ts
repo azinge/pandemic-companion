@@ -84,13 +84,26 @@ export const createPandemicBasePlayerDictionary = () => {
       __typename: 'Player',
       id: `player-${id++}`,
       persistanceLevel: PersistanceLevel.ALWAYS,
+      location: {
+        __typename: 'Location',
+        color: LocationColor.MISC,
+        id: `location-${id++}`,
+        persistanceLevel: PersistanceLevel.ALWAYS,
+        resourcePiles: [],
+        tags: [],
+        name: '',
+        position: { x: 0, y: 0, __typename: 'Position' },
+      },
       cards: [],
       resourcePiles: [],
       tags: [],
     };
   };
+  let traitID = 1;
   const baseTrait = () => ({
     __typename: 'Trait',
+    id: `trait-${traitID++}`,
+    persistanceLevel: PersistanceLevel.ALWAYS,
     name: '',
     type: TraitType.PLAYER,
   });
@@ -707,9 +720,12 @@ export const createPandemicBaseResourceDictionary = () => {
 };
 
 export const createPandemicBaseActionDictionary = () => {
+  let id = 1;
   const baseAction = () => {
     return {
       __typename: 'Trait',
+      id: `trait-${id++}`,
+      persistanceLevel: PersistanceLevel.ALWAYS,
       type: TraitType.PLAYER,
     };
   };
@@ -806,6 +822,12 @@ export const createPandemicBasePlayerCardList = (
       location: {
         __typename: 'Location',
         color: LocationColor.MISC,
+        id: `location-${id++}`,
+        persistanceLevel: PersistanceLevel.ALWAYS,
+        resourcePiles: [],
+        tags: [],
+        name: '',
+        position: { x: 0, y: 0, __typename: 'Position' },
       },
       description: '',
       name: '',
@@ -918,6 +940,7 @@ export const createPandemicBaseInfectionCardList = (
       id: `infection_card-${id++}`,
       persistanceLevel: PersistanceLevel.ALWAYS,
       type: InfectionCardType.LOCATION,
+      description: '',
       traits: [],
       tags: [],
     };
@@ -981,11 +1004,7 @@ export const createPandemicBaseBoardState = (
       drawPileStacks: [
         {
           __typename: 'InfectionDeckStack',
-          shuffledCards: [...infectionCardList.slice(0, 10)],
-        },
-        {
-          __typename: 'InfectionDeckStack',
-          shuffledCards: [...infectionCardList.slice(10)],
+          shuffledCards: [...infectionCardList],
         },
       ],
     },

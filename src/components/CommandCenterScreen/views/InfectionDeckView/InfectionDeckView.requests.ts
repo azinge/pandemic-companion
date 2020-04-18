@@ -77,3 +77,15 @@ export const SAVE_INFECTION_DECK = gql`
     }
   }
 `;
+
+export const CREATE_INFECTION_DECK_STACK = gql`
+  mutation CREATE_INFECTION_DECK_STACK {
+    createInfectionDeckStack @client
+  }
+`;
+
+export const DELETE_INFECTION_DECK_STACK = gql`
+  mutation DELETE_INFECTION_DECK_STACK($index: Int) {
+    deleteInfectionDeckStack(index: $index) @client
+  }
+`;
